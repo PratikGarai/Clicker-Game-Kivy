@@ -1,6 +1,7 @@
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.graphics import Color, Rectangle
 
 class MainMenu(FloatLayout):
     def __init__(self, **kwargs):
@@ -14,7 +15,7 @@ class HeadLabel(Label):
         super(HeadLabel,self).__init__(**kwargs)
         self.pos_hint = { 'top':0.85, 'center_x':0.5 }
         self.size_hint = (0.8,0.25)
-        self.text = '[b][size=50]Clicker Game[/size][/b][sub]Pratik Garai[/sub]'
+        self.text = '[b][size=50]Clicker Game[/size][size=30][/b][sub]Pratik Garai[/sub][/size]'
         self.markup = True
 
 class StartButton(Button):
