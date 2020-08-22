@@ -2,6 +2,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.graphics import Color, Rectangle
+import sys
 
 class MainMenu(FloatLayout):
     def __init__(self, **kwargs):
@@ -25,6 +26,25 @@ class StartButton(Button):
         self.size_hint = (0.4,0.15)
         self.text = '[b][size=30]Start Game[/size][/b]'
         self.markup = True
+        self.start_valid = False
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.start_valid = True
+            return True
+        return super(StartButton, self).on_touch_down(touch)
+
+    def on_touch_move(self,touch):
+        if self.collide_point(*touch.pos):
+            self.start_valid = False
+            return True
+        return super(StartButton, self).on_touch_move(touch)
+
+    def on_touch_up(self,touch):
+        if self.collide_point(*touch.pos) and self.start_valid :
+            self.parent.parent.LaunchGame()
+            return True
+        return super(StartButton, self).on_touch_up(touch)
 
 class QuitButton(Button):
     def __init__(self,**kwargs):
@@ -33,3 +53,22 @@ class QuitButton(Button):
         self.size_hint = (0.4,0.15)
         self.text = '[b][size=25]Quit Game[/size][/b]'
         self.markup = True
+        self.quit_valid = False
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.quit_valid = True
+            return True
+        return super(QuitButton, self).on_touch_down(touch)
+
+    def on_touch_move(self,touch):
+        if self.collide_point(*touch.pos):
+            self.quit_valid = False
+            return True
+        return super(QuitButton, self).on_touch_move(touch)
+
+    def on_touch_up(self,touch):
+        if self.collide_point(*touch.pos) and self.quit_valid :
+            sys.exit(0)
+            return True
+        return super(QuitButton, self).on_touch_up(touch)
