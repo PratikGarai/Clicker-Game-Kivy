@@ -34,11 +34,11 @@ class ScoreBoard(Label):
         self.total  = 0
         self.markup = True
         self.set_text()
-        self.size_hint  = (0.1,0.1)
+        self.size_hint  = (0.2,0.1)
         self.pos_hint = { 'top':1 ,'right':1 }
 
     def set_text(self):
-        self.text = str(self.success)+'/'+str(self.total)
+        self.text = 'Score : '+str(self.success)+'/'+str(self.total)
 
     def increase_success(self):
         self.success += 1
@@ -48,16 +48,33 @@ class ScoreBoard(Label):
         self.total += 1
         self.set_text()
 
+class BackButton(Button):
+    def __init__(self, **kwargs):
+        super(BackButton, self).__init__(**kwargs)
+        self.text = ' < Back to Menu '
+        self.size_hint= (0.2,0.1) 
+        self.pos_hint = { 'top':1 ,'x':0 }
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            if self.parent.GameLoop:
+                self.parent.GameLoop.cancel()
+            self.parent.parent.LoadMenu()
+            return True
+        return super(BackButton, self).on_touch_down(touch)
+
 class Game(RelativeLayout):
 
     score = NumericProperty(0)
     def __init__(self,**kwargs):
         super(Game, self).__init__(**kwargs)
         self.scoreboard = ScoreBoard()
-        self.spawn_time = 0.8
-        self.time_to_vanish = 0.4
+        self.spawn_time = 0.5
+        self.time_to_vanish = 1.2
         self.add_widget(self.scoreboard)
+        self.add_widget(BackButton())
         self.initiate_game()
+        self.GameLoop = None
     
     def scored(self):
         self.score += 1
@@ -66,7 +83,7 @@ class Game(RelativeLayout):
         self.scoreboard.increase_success()
 
     def initiate_game(self):
-        Clock.schedule_interval(self.generate_block, self.spawn_time)
+        self.GameLoop = Clock.schedule_interval(self.generate_block, self.spawn_time)
 
     def generate_block(self, *args):
         a = Block(self.time_to_vanish, random.random()*0.9+0.05, random.random()*0.85+0.025)
