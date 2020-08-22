@@ -1,5 +1,6 @@
 from kivy.app import App
 from MainMenu import MainMenu
+from Game import Game
 from kivy.config import Config
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.label import Label
@@ -14,7 +15,7 @@ class MainLayout(RelativeLayout):
 
     def LaunchGame(self):
         self.clear_widgets()
-        self.add_widget(Label(text="Game"))
+        self.add_widget(Game())
 
     def LoadMenu(self):
         self.clear_widgets()

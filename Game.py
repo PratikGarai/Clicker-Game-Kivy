@@ -1,7 +1,7 @@
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.button import Button
 from kivy.clock import Clock
-from kivy.propties import NumericProperty
+from kivy.properties import NumericProperty
 from kivy.uix.label import Label
 
 class Block(Button):
@@ -12,8 +12,11 @@ class Block(Button):
         self.size_hint = (0.05,0.05)
         Clock.schedule_once(self.vanish, self.time_to_vanish)
 
-    def vanish(self):
-        self.parent.remove(self)
+    def vanish(self, *args):
+        try :
+            self.parent.remove_widget(self)
+        except :
+            pass
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -29,6 +32,8 @@ class ScoreBoard(Label):
         self.total  = 0
         self.markup = True
         self.set_text()
+        self.size_hint  = (0.1,0.1)
+        self.pos_hint = { 'top':1 ,'right':1 }
 
     def set_text(self):
         self.text = str(self.success)+'/'+str(self.total)
@@ -47,19 +52,22 @@ class Game(RelativeLayout):
     def __init__(self,**kwargs):
         super(Game, self).__init__(**kwargs)
         self.scoreboard = ScoreBoard()
-        self.spawn_time = 0.5
-        self.time_to_vanish = 1.5
+        self.spawn_time = 0.8
+        self.time_to_vanish = 0.4
+        self.add_widget(self.scoreboard)
+        self.scoreboard.set_board()
         self.initiate_game()
     
     def scored(self):
-        score += 1
+        self.score += 1
 
     def on_score(self, instance, pos):
-        self.scoreboard.increase()
+        self.scoreboard.increase_success()
 
     def initiate_game(self):
-        Clock.schedule(self.generate_block(), self.spawn_time)
+        Clock.schedule_interval(self.generate_block, self.spawn_time)
 
-    def generate_block(self):
+    def generate_block(self, *args):
         a = Block(self.time_to_vanish)
-        self.add_widget(Block)
+        self.add_widget(a)
+        self.scoreboard.increase_total()
