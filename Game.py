@@ -3,13 +3,15 @@ from kivy.uix.button import Button
 from kivy.clock import Clock
 from kivy.properties import NumericProperty
 from kivy.uix.label import Label
+import random
 
 class Block(Button):
-    def __init__(self,time_to_vanish,**kwargs):
+    def __init__(self,time_to_vanish,p1,p2,**kwargs):
         super(Block, self).__init__(**kwargs)
         self.text = "Here"
         self.time_to_vanish = time_to_vanish
-        self.size_hint = (0.05,0.05)
+        self.size_hint = (0.1,0.05)
+        self.pos_hint = { 'center_x':p1, 'center_y':p2 }
         Clock.schedule_once(self.vanish, self.time_to_vanish)
 
     def vanish(self, *args):
@@ -55,7 +57,6 @@ class Game(RelativeLayout):
         self.spawn_time = 0.8
         self.time_to_vanish = 0.4
         self.add_widget(self.scoreboard)
-        self.scoreboard.set_board()
         self.initiate_game()
     
     def scored(self):
@@ -68,6 +69,6 @@ class Game(RelativeLayout):
         Clock.schedule_interval(self.generate_block, self.spawn_time)
 
     def generate_block(self, *args):
-        a = Block(self.time_to_vanish)
+        a = Block(self.time_to_vanish, random.random()*0.9+0.05, random.random()*0.85+0.025)
         self.add_widget(a)
         self.scoreboard.increase_total()
